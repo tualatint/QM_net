@@ -69,12 +69,21 @@ class MQTrainer:
                     x.to(self.device, dtype=torch.float),
                     y.to(self.device, dtype=torch.float),
                 )
-                output = self.model(x.view(-1, 3, 3))
+                # print("x", x)
+                x = x.view(-1, 9)
+                # print("x re", x)
+                output = self.model(x)
                 # output = output.view(-1, 4)
+                # print("output ", output.shape)
+                # print("y", y.shape)
+                # dif = output - y
+                l = y.shape[0]
                 loss = self.criterion(output, y)
-                loss += self.criterion(
-                    self.const_1, torch.Tensor([LA.norm(y.to("cpu"))]).to(self.device)
+                loss2 = self.criterion(
+                    self.const_1.expand(1, l),
+                    torch.Tensor([LA.norm(y.to("cpu"), axis=1)]).to(self.device),
                 )
+                loss += loss2
                 total_loss += loss.data
                 if b_val:
                     bar.update(self.iter)
@@ -86,7 +95,7 @@ class MQTrainer:
                     self.optimizer.step()
                     bar.update(self.iter)
                     print(
-                        "train loss:{:.4f} in {} iteration {} epoch.".format(
+                        "train loss:{:.10f} in {} iteration {} epoch.".format(
                             self.train_loss.data, self.iter, self.epoch
                         )
                     )

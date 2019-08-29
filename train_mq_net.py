@@ -19,9 +19,9 @@ learning_rate = 1e-4
 
 exp_index = 1
 model = MQnet().to(device)
-# exsit_model_file = "QMv1_1.pth"
-# model.load_state_dict(torch.load("./models/" + exsit_model_file))
-# print("Load model file: ", exsit_model_file)
+exsit_model_file = "mqv1_1.pth"
+model.load_state_dict(torch.load("./models/" + exsit_model_file))
+print("Load model file: ", exsit_model_file)
 criterion = torch.nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-5)
 
@@ -34,6 +34,7 @@ trainer = MQTrainer(
     exp_index,  # experiment serial number
     max_epoch=100,  # maximun epochs
 )
+
 
 ########### training loop ###########
 try:

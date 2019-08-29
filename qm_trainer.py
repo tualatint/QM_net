@@ -71,9 +71,13 @@ class QMTrainer:
                 )
                 output = self.model(x)
                 output = output.view(-1, 3, 3)
+                # print("output", output.shape)
+                # print("y", y.shape)
+                l = y.shape[0]
                 loss = self.criterion(output, y)
                 loss += self.criterion(
-                    self.const_1, torch.Tensor([LA.det(y.to("cpu"))]).to(self.device)
+                    self.const_1.expand(1, l),
+                    torch.Tensor([LA.det(y.to("cpu"))]).to(self.device),
                 )
                 total_loss += loss.data
                 if b_val:
@@ -86,7 +90,7 @@ class QMTrainer:
                     self.optimizer.step()
                     bar.update(self.iter)
                     print(
-                        "train loss:{:.4f} in {} iteration {} epoch.".format(
+                        "train loss:{:.10f} in {} iteration {} epoch.".format(
                             self.train_loss.data, self.iter, self.epoch
                         )
                     )
