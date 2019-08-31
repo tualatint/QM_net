@@ -5,7 +5,7 @@ import torch
 import numpy as np
 from mq_trainer import MQTrainer
 
-params = {"batch_size": 100, "shuffle": True, "num_workers": 6}
+params = {"batch_size": 1000, "shuffle": True, "num_workers": 6}
 data_size = np.int64(1e8)
 training_set = Genrator(data_size)
 print("training dataset size:", len(training_set))
